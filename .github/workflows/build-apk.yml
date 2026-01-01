@@ -14,7 +14,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # Menggunakan action yang stabil untuk membungkus web jadi APK
+      # Pakai library ini, masih sangat aktif dan terawat
       - name: Build Android APK
         uses: khaled-mgh/website-to-apk@v1.1.0
         with:

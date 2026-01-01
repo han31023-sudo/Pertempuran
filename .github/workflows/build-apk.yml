@@ -1,4 +1,4 @@
-name: Build APK Otomatis
+name: Build APK
 on: [push]
 
 jobs:
@@ -8,22 +8,26 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Kita pakai cara manual yang lebih aman & modern
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Build APK via Bubblewrap
-        run: |
-          npm install -g @bubblewrap/cli
-          # Script ini akan membungkus folder root menjadi APK
-          # Kita pakai Bubblewrap karena ini standar resmi Google
-          bubblewrap init --manifest=manifest.json || true
-          bubblewrap build --skip-signing
+      - name: Build APK
+        uses: progressier/pwa-to-apk@v1.0.0
+        with:
+          # Pastikan file index.html ada di root (halaman depan)
+          web-dir: './'
+          app-name: 'GeminiTube'
+          package-id: 'com.gemini.tube'
 
-      - name: Upload Hasil APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: GeminiTube-APK

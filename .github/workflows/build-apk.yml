@@ -1,0 +1,23 @@
+name: Build APK Otomatis
+on: [push]
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Build APK dari Folder Dist
+        uses: t00m/action-website-to-apk@v1
+        with:
+          # Menggunakan folder dist yang sudah bosku upload
+          website-url: './' 
+          app-name: 'GeminiTube'
+          package-name: 'com.gemini.tube'
+          
+      - name: Upload Hasil APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: GeminiTube-App
+          path: ./*.apk

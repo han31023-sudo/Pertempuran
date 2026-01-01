@@ -1,4 +1,4 @@
-name: Build APK
+name: Build APK GeminiTube
 on: [push]
 
 jobs:
@@ -14,18 +14,37 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build APK with Bubblewrap
+      - name: Build Proses
         run: |
+          # Install Bubblewrap secara global
           npm install -g @bubblewrap/cli
-          # Membuat manifest otomatis supaya tidak nanya-nanya
-          echo '{"name":"GeminiTube","short_name":"GeminiTube","start_url":"/index.html","display":"standalone","background_color":"#fff","theme_color":"#000","icons":[{"src":"https://vitejs.dev/logo.svg","sizes":"512x512","type":"image/png"}]}' > manifest.json
           
-          # Inisialisasi dan Build otomatis
-          bubblewrap init --manifest=manifest.json --no-interactive
+          # Buat file manifest otomatis (Standard PWA)
+          echo '{
+            "name": "GeminiTube",
+            "short_name": "GeminiTube",
+            "start_url": "index.html",
+            "display": "standalone",
+            "background_color": "#ffffff",
+            "theme_color": "#000000",
+            "icons": [
+              {
+                "src": "https://vitejs.dev/logo.svg",
+                "sizes": "512x512",
+                "type": "image/png"
+              }
+            ]
+          }' > manifest.json
+
+          # TRIK SAKTI: Menjawab otomatis semua pertanyaan (Y/n) dari Bubblewrap
+          # Termasuk izin install JDK dan Android SDK di server
+          yes | bubblewrap init --manifest=manifest.json
+          
+          # Build APK tanpa tanda tangan digital (untuk testing langsung instal)
           bubblewrap build --skip-signing
 
-      - name: Upload APK
+      - name: Upload Hasil APK
         uses: actions/upload-artifact@v4
         with:
-          name: GeminiTube-APK
+          name: GeminiTube-App-Hasil
           path: "*.apk"

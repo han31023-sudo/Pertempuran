@@ -1,4 +1,4 @@
-name: Build APK
+name: Build APK Manual
 on: [push]
 
 jobs:
@@ -8,23 +8,26 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Java
+      - name: set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
           java-version: '17'
+          distribution: 'temurin'
 
-      # Pakai library ini, masih sangat aktif dan terawat
-      - name: Build Android APK
-        uses: khaled-mgh/website-to-apk@v1.1.0
-        with:
-          app-name: 'GeminiTube'
-          # Pastikan file index.html ada di root (halaman depan repo)
-          web-dir: '.'
-          package-name: 'com.gemini.tube'
-          
+      # Kita buat struktur project Android sederhana lewat script
+      - name: Build APK with Bubblewrap CLI
+        run: |
+          npm install -g @bubblewrap/cli
+          # Membuat manifest palsu jika bosku belum punya agar tidak error
+          if [ ! -f manifest.json ]; then
+            echo '{"name":"GeminiTube","short_name":"GeminiTube","start_url":"/index.html","display":"standalone","background_color":"#fff","theme_color":"#000","icons":[{"src":"/assets/icon.png","sizes":"512x512","type":"image/png"}]}' > manifest.json
+          fi
+          # Proses packing
+          bubblewrap init --manifest=manifest.json --no-interactive
+          bubblewrap build --skip-signing
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: GeminiTube-APK
-          path: ./*.apk
+          name: GeminiTube-App
+          path: "*.apk"

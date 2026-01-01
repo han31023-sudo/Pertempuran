@@ -8,25 +8,21 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Build APK
-        uses: progressier/pwa-to-apk@v1.0.0
+      # Menggunakan action yang stabil untuk membungkus web jadi APK
+      - name: Build Android APK
+        uses: khaled-mgh/website-to-apk@v1.1.0
         with:
-          # Pastikan file index.html ada di root (halaman depan)
-          web-dir: './'
           app-name: 'GeminiTube'
-          package-id: 'com.gemini.tube'
-
+          # Pastikan file index.html ada di root (halaman depan repo)
+          web-dir: '.'
+          package-name: 'com.gemini.tube'
+          
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:

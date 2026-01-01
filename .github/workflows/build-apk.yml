@@ -6,19 +6,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Packaging APK
-        uses: t00m/action-website-to-apk@v1
+      # Kita pakai cara manual yang lebih aman & modern
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
-          # Titik artinya GitHub akan mengambil file index.html 
-          # yang langsung ada di halaman depan repo bosku.
-          website-url: './' 
-          app-name: 'GeminiTube'
-          package-name: 'com.gemini.tube'
-          
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build APK via Bubblewrap
+        run: |
+          npm install -g @bubblewrap/cli
+          # Script ini akan membungkus folder root menjadi APK
+          # Kita pakai Bubblewrap karena ini standar resmi Google
+          bubblewrap init --manifest=manifest.json || true
+          bubblewrap build --skip-signing
+
+      - name: Upload Hasil APK
+        uses: actions/upload-artifact@v4
         with:
           name: GeminiTube-APK
           path: ./*.apk

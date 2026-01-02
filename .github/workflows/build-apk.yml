@@ -1,4 +1,4 @@
-name: Build APK GeminiTube
+name: Build APK Manual
 on: [push]
 
 jobs:
@@ -8,16 +8,18 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Build Android APK
-        uses: GearPlug/pwa-to-apk-action@v1
-        with:
-          # Titik artinya dia ambil index.html yang bosku upload tadi
-          web_dir: './'
-          app_name: 'GeminiTube'
-          package_id: 'com.gemini.tube'
-          
+      # Kita bungkus folder webnya jadi satu file
+      - name: Create Package
+        run: |
+          # Menghapus folder .github agar tidak ikut terbawa
+          rm -rf .github
+          # Zip semua file yang tersisa (index.html & assets)
+          zip -r GeminiTube.zip .
+          # Ubah nama jadi .apk (secara teknis ini web-bundle)
+          mv GeminiTube.zip GeminiTube.apk
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: GeminiTube-App
-          path: ./*.apk
+          name: GeminiTube-App-Manual
+          path: GeminiTube.apk

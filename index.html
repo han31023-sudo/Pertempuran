@@ -1,115 +1,51 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GeminiTube | Playlist & Search</title>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>GeminiTube</title>
     <style>
-        :root { --bg: #0f0f0f; --surface: #1a1a1a; --primary: #ff0000; }
-        body { margin: 0; background: var(--bg); color: white; font-family: 'Roboto', sans-serif; }
-        
-        /* HEADER */
-        header { background: var(--bg); padding: 10px 20px; display: flex; align-items: center; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 1000; }
-        .logo { color: var(--primary); font-size: 22px; font-weight: bold; text-decoration: none; margin-right: 20px; }
-        
-        .search-bar { flex-grow: 1; max-width: 500px; display: flex; margin: 0 auto; }
-        .search-bar input { width: 100%; padding: 10px 15px; border-radius: 20px 0 0 20px; border: 1px solid #333; background: #121212; color: white; outline: none; }
-        .search-bar button { padding: 10px 20px; border-radius: 0 20px 20px 0; border: none; background: #333; color: white; cursor: pointer; }
-
-        /* GRID */
-        .container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 20px; }
-        .card { cursor: pointer; transition: 0.3s; }
-        .card:hover { transform: scale(1.02); }
-        .thumb-box { position: relative; width: 100%; aspect-ratio: 16/9; background: #222; border-radius: 12px; overflow: hidden; }
-        .thumb-box img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .info { padding: 10px 5px; }
-        .v-title { font-size: 15px; font-weight: 500; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .v-meta { font-size: 13px; color: #aaa; }
-
-        /* MODAL PLAYER */
-        #player { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; }
-        .player-inner { width: 90%; max-width: 850px; position: relative; }
-        .close-btn { position: absolute; top: -40px; right: 0; font-size: 30px; cursor: pointer; }
-        iframe { width: 100%; aspect-ratio: 16/9; border-radius: 10px; border: none; }
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #0f0f0f;
+        color: white;
+        font-family: Roboto, Arial, sans-serif;
+        overflow-x: hidden;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      /* Scrollbar styling */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0f0f0f; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #717171; 
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #a0a0a0; 
+      }
     </style>
-</head>
-<body>
 
-<header>
-    <a href="javascript:void(0)" onclick="window.location.reload()" class="logo">▶ GeminiTube</a>
-    <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Ketik judul video lalu klik tombol cari..." onkeyup="if(event.key==='Enter') jalankanCari()">
-        <button onclick="jalankanCari()">Cari</button>
-    </div>
-</header>
-
-<div class="container" id="videoList">
-    </div>
-
-<div id="player" onclick="tutupVideo()">
-    <div class="player-inner" onclick="event.stopPropagation()">
-        <span class="close-btn" onclick="tutupVideo()">&times;</span>
-        <div id="frameBox"></div>
-    </div>
-</div>
-
-<script>
-    // --- INI PLAYLIST KAMU (EDIT DI SINI) ---
-    const playlist = [
-        { id: "L2VvX1H_uEc", judul: "Cara Mengatasi Error 403 Forbidden", views: "10rb" },
-        { id: "Xp_9vYVd6v8", judul: "Review Game Keren Hari Ini", views: "25rb" },
-        { id: "dQw4w9WgXcQ", judul: "Tutorial Hosting Web Sendiri", views: "50rb" },
-        { id: "7wtfhZwyrcc", judul: "Playlist Musik Santai 2024", views: "100rb" }
-    ];
-
-    const listContainer = document.getElementById('videoList');
-
-    // Fungsi nampilin video
-    function tampilkanVideo(dataArray) {
-        listContainer.innerHTML = "";
-        if(dataArray.length === 0) {
-            listContainer.innerHTML = "<p style='text-align:center; grid-column: 1/-1;'>Video tidak ditemukan bosku...</p>";
-            return;
-        }
-        dataArray.forEach(item => {
-            listContainer.innerHTML += `
-                <div class="card" onclick="putarVideo('${item.id}')">
-                    <div class="thumb-box">
-                        <img src="https://img.youtube.com/vi/${item.id}/maxresdefault.jpg">
-                    </div>
-                    <div class="info">
-                        <div class="v-title">${item.judul}</div>
-                        <div class="v-meta">GeminiTube • ${item.views} ditonton</div>
-                    </div>
-                </div>
-            `;
-        });
-    }
-
-    // Fungsi Player
-    function putarVideo(id) {
-        document.getElementById('frameBox').innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1" allowfullscreen></iframe>`;
-        document.getElementById('player').style.display = 'flex';
-    }
-
-    function tutupVideo() {
-        document.getElementById('player').style.display = 'none';
-        document.getElementById('frameBox').innerHTML = '';
-    }
-
-    // --- FUNGSI PENCARIAN (PERBAIKAN) ---
-    function jalankanCari() {
-        const kataKunci = document.getElementById('searchInput').value.toLowerCase();
-        const hasilFilter = playlist.filter(video => 
-            video.judul.toLowerCase().includes(kataKunci)
-        );
-        tampilkanVideo(hasilFilter);
-    }
-
-    // Jalankan saat web dibuka
-    tampilkanVideo(playlist);
+<link rel="stylesheet" href="index.css">
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+  }
+}
 </script>
-
-</body>
+  <script type="module" crossorigin src="assets/index-B64uAyQO.js"></script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
 </html>
+

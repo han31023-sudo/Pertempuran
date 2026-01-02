@@ -8,33 +8,20 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
+      # Kita pakai library yang memang didesain untuk GitHub Actions tanpa tanya-tanya
+      - name: Build Android APK
+        uses: GearPlug/pwa-to-apk-action@v1
         with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Build Proses
-        run: |
-          # 1. Install Bubblewrap
-          npm install -g @bubblewrap/cli
+          # Pastikan file index.html ada di halaman depan repo
+          web_dir: './'
+          app_name: 'GeminiTube'
+          package_id: 'com.gemini.tube'
           
-          # 2. Buat file manifest otomatis
-          echo '{"name":"GeminiTube","short_name":"GeminiTube","start_url":"index.html","display":"standalone","background_color":"#fff","theme_color":"#000","icons":[{"src":"https://vitejs.dev/logo.svg","sizes":"512x512","type":"image/png"}]}' > manifest.json
-
-          # 3. SET KONFIGURASI MANUAL (Agar dia tidak nanya JDK lagi)
-          mkdir -p ~/.bubblewrap
-          echo '{"jdkPath":"'"$JAVA_HOME"'","androidSdkPath":"/usr/local/lib/android/sdk"}' > ~/.bubblewrap/config.json
-          
-          # 4. JALANKAN DENGAN PERINTAH YES (Double Protection)
-          # Perintah 'yes' akan menjawab 'y' otomatis ke semua pertanyaan sisa
-          yes "" | bubblewrap init --manifest=manifest.json
-          
-          # 5. BUILD TANPA SIGNING
-          bubblewrap build --skip-signing
-
-      - name: Upload Hasil APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
+        with:
+          name: GeminiTube-App
+          path: ./*.apk        uses: actions/upload-artifact@v4
         with:
           name: GeminiTube-App-Hasil
           path: "*.apk"

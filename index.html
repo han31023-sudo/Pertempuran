@@ -2,125 +2,76 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GeminiTube | Search & Watch</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeminiTube | Home</title>
     <style>
-        body { margin: 0; background-color: #0f0f0f; color: white; font-family: 'Roboto', Arial, sans-serif; }
+        body { margin: 0; background: #0f0f0f; color: white; font-family: Roboto, Arial, sans-serif; }
+        header { background: #0f0f0f; padding: 10px 20px; display: flex; align-items: center; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; }
+        .logo { color: red; font-size: 22px; font-weight: bold; text-decoration: none; margin-right: 20px; }
+        .search-bar { flex-grow: 1; max-width: 600px; display: flex; }
+        .search-bar input { width: 100%; padding: 10px; border-radius: 20px 0 0 20px; border: 1px solid #333; background: #121212; color: white; outline: none; }
+        .search-bar button { padding: 10px 20px; border-radius: 0 20px 20px 0; border: none; background: #333; color: white; cursor: pointer; }
         
-        /* HEADER DENGAN SEARCH BAR */
-        header {
-            background-color: #0f0f0f;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid #222;
-            gap: 15px;
-        }
+        .categories { display: flex; gap: 10px; padding: 15px 20px; overflow-x: auto; white-space: nowrap; }
+        .categories span { background: #333; padding: 8px 15px; border-radius: 10px; font-size: 14px; cursor: pointer; }
+        .categories span:hover { background: #444; }
 
-        .logo { color: white; text-decoration: none; font-size: 20px; font-weight: bold; flex-shrink: 0; }
-        .logo span { color: #ff0000; }
-
-        .search-container {
-            display: flex;
-            flex-grow: 1;
-            max-width: 600px;
-            margin: 0 10px;
-        }
-
-        .search-container input {
-            width: 100%;
-            padding: 8px 15px;
-            background-color: #121212;
-            border: 1px solid #333;
-            border-radius: 20px 0 0 20px;
-            color: white;
-            outline: none;
-        }
-
-        .search-container button {
-            padding: 8px 20px;
-            background-color: #333;
-            border: 1px solid #333;
-            border-radius: 0 20px 20px 0;
-            color: white;
-            cursor: pointer;
-        }
-
-        .search-container button:hover { background-color: #444; }
-
-        /* GRID VIDEO */
-        .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            max-width: 1400px;
-            margin: auto;
-        }
-
-        .video-card { background: transparent; }
-        .thumbnail {
-            position: relative;
-            padding-bottom: 56.25%;
-            background-color: #222;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        .thumbnail iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        
-        .video-title { font-size: 15px; font-weight: 500; margin: 10px 0 5px 0; line-height: 1.4; }
-        .meta { font-size: 13px; color: #aaa; }
-
-        @media (max-width: 600px) {
-            .logo span { display: none; } /* Sembunyikan teks di HP biar muat */
-        }
+        .container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 20px; }
+        .video-card { background: transparent; transition: 0.3s; cursor: pointer; }
+        .video-card:hover { transform: scale(1.03); }
+        .thumb { width: 100%; aspect-ratio: 16/9; background: #222; border-radius: 12px; object-fit: cover; }
+        .v-title { font-size: 15px; font-weight: bold; margin: 10px 0 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .v-meta { font-size: 13px; color: #aaa; }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="#" class="logo"><span>▶</span> GeminiTube</a>
-    
-    <form class="search-container" id="searchForm">
-        <input type="text" id="searchInput" placeholder="Cari video..." required>
-        <button type="submit">🔍</button>
-    </form>
-
-    <div style="width: 40px; height: 40px; background: #444; border-radius: 50%;"></div>
+    <a href="#" class="logo">GeminiTube</a>
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Cari video di sini...">
+        <button onclick="searchVideo()">🔍</button>
+    </div>
 </header>
 
-<div class="container">
-    <div class="video-card">
-        <div class="thumbnail">
-            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
-        </div>
-        <p class="video-title">Cara Setting Pencarian Tanpa API Key</p>
-        <p class="meta">GeminiTube • 1 jt ditonton</p>
-    </div>
-
-    <div class="video-card">
-        <div class="thumbnail">
-            <iframe src="https://www.youtube.com/embed/ID_VIDEO_2" allowfullscreen></iframe>
-        </div>
-        <p class="video-title">Review Hosting Anti Lemot Bosku</p>
-        <p class="meta">GeminiTube • 500 rb ditonton</p>
-    </div>
+<div class="categories">
+    <span>Semua</span><span>Musik</span><span>Game</span><span>Live</span><span>Berita</span><span>Edukasi</span>
 </div>
 
+<div class="container" id="videoContainer">
+    </div>
+
 <script>
-    // SCRIPT PENCARIAN
-    document.getElementById('searchForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const query = document.getElementById('searchInput').value;
-        if (query) {
-            // Mengarahkan pencarian langsung ke YouTube
-            window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(query), '_blank');
-        }
-    });
+    // DAFTAR VIDEO KAMU (Bisa ditambah sebanyak mungkin)
+    const databaseVideo = [
+        { id: "dQw4w9WgXcQ", title: "Tutorial GeminiTube v1", views: "1,2 jt ditonton" },
+        { id: "ID_VIDEO_2", title: "Cara Atasi Error 403 Forbidden", views: "500 rb ditonton" },
+        { id: "ID_VIDEO_3", title: "Review Hosting Murah Bosku", views: "80 rb ditonton" },
+        { id: "ID_VIDEO_4", title: "Main Game Lancar Jaya", views: "2 jt ditonton" }
+    ];
+
+    function loadVideos(data) {
+        const container = document.getElementById('videoContainer');
+        container.innerHTML = "";
+        data.forEach(v => {
+            container.innerHTML += `
+                <div class="video-card" onclick="window.open('https://youtube.com/watch?v=${v.id}')">
+                    <img src="https://img.youtube.com/vi/${v.id}/maxresdefault.jpg" class="thumb">
+                    <div class="v-title">${v.title}</div>
+                    <div class="v-meta">GeminiTube • ${v.views}</div>
+                </div>
+            `;
+        });
+    }
+
+    function searchVideo() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const hasil = databaseVideo.filter(v => v.title.toLowerCase().includes(query));
+        loadVideos(hasil);
+    }
+
+    // Load video pas pertama buka
+    loadVideos(databaseVideo);
 </script>
 
 </body>

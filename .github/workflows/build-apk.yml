@@ -8,10 +8,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Menggunakan action yang tidak perlu tanya-tanya JDK
       - name: Build Android APK
         uses: GearPlug/pwa-to-apk-action@v1
         with:
+          # Titik artinya dia ambil index.html yang bosku upload tadi
           web_dir: './'
           app_name: 'GeminiTube'
           package_id: 'com.gemini.tube'
